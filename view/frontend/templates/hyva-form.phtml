@@ -1,0 +1,327 @@
+<?php
+/**
+ * ManiyaTech
+ *
+ * @author        Milan Maniya
+ * @package       ManiyaTech_Crud
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/** @var ViewModelRegistry $viewModels */
+$countryList = $block->getCountries();
+$regionList = $block->getRegion();
+$standards = $block->getStudentstandards();
+$directoryViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Directory::class);
+$showOptionalRegions = true;
+$streetLabel = 'State';
+$regionLabel = 'Region';
+$class = 'mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'; //phpcs:ignore
+?>
+<form id="student-form"
+      action="<?= /* @noEscape */ $block->getUrl('*/*/save'); ?>"
+      method="post"
+      enctype="multipart/form-data"
+      autocomplete="off"
+      x-data="Object.assign(initStudentForm(), hyva.formValidation($el))"
+      @private-content-loaded.window="onPrivateContentLoaded($event.detail.data)"
+      @submit="onSubmit"
+      data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>">
+    <fieldset>
+        <legend class="text-2xl font-bold mb-4"><?= /* @noEscape */ __('Student Form') ?></legend>
+        <input type="hidden" name="form_key" value="<?= /* @noEscape */ $block->getFormKey(); ?>" />
+        <input type="hidden" name="status" value="1" />
+        <input type="hidden" name="form_type" value="hyva" />
+        <!-- Profile Field -->
+        <div class="mb-4 field required">
+            <label for="profile" class="block text-sm font-medium text-gray-700"><?= /* @noEscape */ __('Profile') ?></label><?php //phpcs:ignore ?>
+            <input type="file" id="profile" name="profile" data-validate='{"required": true}' @change="onChange">
+        </div>
+
+        <!-- Name Field -->
+        <div class="mb-4 field required">
+            <label for="name" class="block text-sm font-medium text-gray-700"><?= /* @noEscape */ __('Name') ?></label>
+            <input type="text" id="name" name="name" class="<?= /* @noEscape */ $class ?>" placeholder="Enter your name" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+        </div>
+
+        <!-- Student Standard Field -->
+        <div class="mb-4 field required">
+            <label for="stud_standard_id" class="block text-sm font-medium text-gray-700">
+                <?= /* @noEscape */ __('Standard') ?>
+            </label>
+            <select id="stud_standard_id" name="stud_standard_id" class="<?= /* @noEscape */ $class ?>" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+                <?php if ($standards->getSize()):?>
+                    <option value=""><?= /* @noEscape */ __('Please Select') ?></option>
+                    <?php foreach ($standards as $standard) { ?>
+                        <option value="<?= /* @noEscape */ $standard->getStandardId() ?>">
+                            <?= /* @noEscape */ $standard->getTitle() ?>
+                        </option>
+                    <?php } else: ?>
+                        <option value="">
+                            <?= /* @noEscape */ __('Please add standard first from admin side.') ?>
+                        </option>
+                <?php endif;?>
+          </select>
+        </div>
+
+        <!-- Email Field -->
+        <div class="mb-4 field required">
+            <label for="email" class="block text-sm font-medium text-gray-700">
+                <?= /* @noEscape */ __('Email') ?>
+            </label>
+            <input type="email" id="email" name="email" class="<?= /* @noEscape */ $class ?>" placeholder="Enter your email" @change="onChange"><?php //phpcs:ignore ?>
+            <p id="email-validation-message" class="text-red-500 text-xs mt-1 hidden"><?= /* @noEscape */ __('This email is already in use.') ?></p><?php //phpcs:ignore ?>
+        </div>
+
+        <!-- Gender Field -->
+        <div class="mb-4 field required">
+            <label class="block text-sm font-medium text-gray-700"><?= /* @noEscape */ __('Gender') ?></label>
+            <div class="mt-1 space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" id="gender_male" name="gender" value="male" class="form-radio text-blue-600" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+                    <span class="ml-2"><?= /* @noEscape */ __('Male') ?></span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" id="gender_female" name="gender" value="female" class="form-radio text-blue-600" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+                    <span class="ml-2"><?= /* @noEscape */ __('Female') ?></span>
+                </label>
+          </div>
+        </div>
+
+        <!-- Hobby Field -->
+        <div class="mb-4 field required">
+            <label class="block text-sm font-medium text-gray-700"><?= /* @noEscape */ __('Hobby') ?></label>
+            <div class="mt-1 space-y-2">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" id="hobby_cricket" name="hobby[]" value="cricket" class="form-checkbox text-blue-600" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+                    <span class="ml-2"><?= /* @noEscape */ __('Playing Cricket') ?></span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="checkbox" id="hobby_movie" name="hobby[]" value="movie" class="form-checkbox text-blue-600" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+                    <span class="ml-2"><?= /* @noEscape */ __('Watching Movie') ?></span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="checkbox" id="hobby_reading" name="hobby[]" value="reading" class="form-checkbox text-blue-600" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+                    <span class="ml-2"><?= /* @noEscape */ __('Reading Book') ?></span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="checkbox" id="hobby_swimming" name="hobby[]" value="swimming" class="form-checkbox text-blue-600" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+                    <span class="ml-2"><?= /* @noEscape */ __('Swimming') ?></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Address Field -->
+        <div class="mb-4 field required">
+            <label for="address" class="block text-sm font-medium text-gray-700"><?= /* @noEscape */ __('Address') ?></label><?php //phpcs:ignore ?>
+            <textarea id="address" name="address" rows="3" class="<?= /* @noEscape */ $class ?>" placeholder="Enter your address" data-validate='{"required": true}' @change="onChange"></textarea><?php //phpcs:ignore ?>
+        </div>
+
+        <!-- Country Field -->
+        <div class="mb-4 field required">
+            <label class="label" for="country_id">
+                <span><?= /* @noEscape */ __('Country') ?></span>
+            </label>
+            <div class="control">
+                <?php $countries = $block
+                    ->getCountryCollection()
+                    ->setForegroundCountries($directoryViewModel->getTopCountryCodes())
+                    ->toOptionArray();
+                ?>
+                <select name="country_id"
+                        id="country"
+                        title="<?= /* @noEscape */ __('Country') ?>"
+                        required
+                        class="<?= /* @noEscape */ $class ?>"
+                        x-ref="country_id"
+                        @input.debounce="changeCountry"
+                >
+                    <?php foreach ($countries as $country): ?>
+                        <option name="<?= /** @noEscape */ $country['label'] ?>"
+                                value="<?= /** @noEscape */ $country['value'] ?>"
+                                data-is-region-required="<?= (isset($country['is_region_required'])) ? '1' : '0' ?>"
+                                <?= ($block->getCountryId() ===  $country['value']) ? 'selected="selected"' : '' ?>
+                        >
+                            <?= /** @noEscape */ $country['label'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <!-- Region Field -->
+        <div
+            class="field field-reserved region w-full"
+            x-cloak
+            x-show="(hasAvailableRegions() && isRegionRequired) || showOptionalRegions"
+            :class="{ 'required': isRegionRequired }"
+        >
+            <label class="label" for="region_id">
+                <span><?= /* @noEscape */ $regionLabel ?></span>
+            </label>
+            <div class="control">
+                <template x-if="hasAvailableRegions() && (isRegionRequired || showOptionalRegions)">
+                    <select id="region_id" name="region_id"
+                            title="<?= /* @noEscape */ $regionLabel ?>"
+                            class="<?= /* @noEscape */ $class ?> validate-select region_id"
+                            x-ref="region_id"
+                            x-model="selectedRegion"
+                            :required="isRegionRequired"
+                            @input.debounce="onRegionIdChange"
+                    >
+                        <option value=""><?= $escaper->escapeHtml(__('Please select a region, state or province.')) ?></option><?php //phpcs:ignore ?>
+                        <template x-for="regionId in Object.keys(availableRegions)">
+                            <option :value="regionId"
+                                    :name="availableRegions[regionId] && availableRegions[regionId].name"
+                                    x-text="availableRegions[regionId] && availableRegions[regionId].name"
+                                    :selected="selectedRegion === regionId"
+                            >
+                            </option>
+                        </template>
+                    </select>
+                </template>
+                <input :type="hasAvailableRegions() && (isRegionRequired || showOptionalRegions) ? 'hidden' : 'text'"
+                       id="region"
+                       name="region"
+                       x-ref="region"
+                       value="<?= $escaper->escapeHtmlAttr($block->getRegion()) ?>"
+                       title="<?= /* @noEscape */ $regionLabel ?>"
+                       class="<?= /* @noEscape */ $class ?>"
+                       aria-label="<?= /* @noEscape */ $regionLabel ?>"
+                       :required="!hasAvailableRegions() && !showOptionalRegions ? isRegionRequired : false"
+                       @input.debounce="onChange"
+                />
+            </div>
+        </div>
+
+        <!-- City Field -->
+        <div class="mb-4 field required">
+            <label for="city" class="block text-sm font-medium text-gray-700">
+                <span><?= /* @noEscape */ __('City') ?></span>
+            </label>
+            <div class="control">
+                <input type="text" id="city" name="city" class="<?= /* @noEscape */ $class ?>" data-validate='{"required": true}' @change="onChange"><?php //phpcs:ignore ?>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="actions">
+            <button type="submit" id="student-form button" class="ml-1 rounded text-13px bg-black text-white px-5 py-1.5" title="<?= $escaper->escapeHtml(__('Submit')) ?>"><?php //phpcs:ignore ?>
+                <span><?= $escaper->escapeHtml(__('Submit')) ?></span>
+            </button>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+hyva.formValidation.addRule('email', function(value, options, field, context) {
+    return new Promise(resolve => {
+        // Check if the email is required
+        if (!value) {
+            resolve('Please enter an email address.');
+            return;
+        }
+
+        // Validate the email format
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+        if (!emailPattern.test(value)) {
+            resolve('Please enter a valid email address.');
+            return;
+        }
+
+        // Proceed with server-side validation for email uniqueness
+        field.element.disabled = true; // Optionally show spinner or disable the field
+        fetch('<?= $block->getUrl("*/student/checkEmailExistsHyva"); ?>' + '?form_key=' + hyva.getFormKey(), { <?php //phpcs:ignore ?>
+            method: 'post',
+            body: JSON.stringify({ email: value }),
+            headers: { contentType: 'application/json' }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (!result.exists) {
+                resolve(true); // Email is valid
+            } else {
+                resolve(hyva.strf('The email "%0" is already exist.', value)); // Email already exists
+            }
+        })
+        .finally(() => {
+            field.element.disabled = false; // Indicate validation completion
+        });
+    });
+});
+
+function initStudentForm() {
+    return {
+        directoryData: {},
+        availableRegions: {},
+        messageTime: 5000,
+        fieldsNames: [],
+        selectedRegion: '',
+        isRegionRequired: true,
+        showOptionalRegions: <?= $showOptionalRegions ? 'true' : 'false' ?>,
+        onPrivateContentLoaded(data) {
+            this.directoryData = data['directory-data'] || {};
+
+            <?php if ($block->getCountryId()): ?>
+                this.setCountry(this.$refs['country_id'], '<?= $escaper->escapeJs($block->getRegion()) ?>');
+            <?php endif; ?>
+
+        },
+        setRegionInputValue(regionName) {
+            this.$nextTick(() => {
+                const regionInputElement = this.$refs['region'];
+                if (regionInputElement) {
+                    regionInputElement.value = regionName;
+                }
+            })
+        },
+        setCountry(countrySelectElement, initialRegion) {
+            const selectedOption = countrySelectElement.options[countrySelectElement.selectedIndex];
+            const countryCode = countrySelectElement.value;
+            const countryData = this.directoryData[countryCode] || false;
+
+            if (!countryData) {
+                this.setRegionInputValue('');
+                return;
+            }
+            
+            this.isRegionRequired = selectedOption.dataset.isRegionRequired === '1';
+            this.availableRegions = countryData.regions || {};
+
+            const initialRegionId = Object.keys(this.availableRegions).filter(regionId => this.availableRegions[regionId].name === initialRegion)[0]; <?php //phpcs:ignore ?>
+            this.selectedRegion = initialRegionId;
+            this.setRegionInputValue(initialRegionId && this.availableRegions[initialRegionId].name || '');
+
+        },
+        changeCountry(event, initialRegion) {
+            this.setCountry(event.target, initialRegion);
+            this.validateCountryDependentFields();
+            this.onChange(event);
+        },
+        validateCountryDependentFields() {
+            this.$nextTick(() => {
+                <?php /* Reinitialize validation rules for fields that depend on the country */ ?>
+                this.fields['region'] && this.removeMessages(this.fields['region'])
+                delete this.fields['region'];
+                <?php /* Initialize country_id, too, because the postcode validation depends on it */ ?>
+                this.setupField(this.$refs['country_id']);
+                this.setupField(this.$refs['region']);
+                this.setupField(this.$refs['region_id']);
+
+                this.fields['region'] && this.validateField(this.fields['region']);
+                this.fields['region_id'] && this.validateField(this.fields['region_id']);
+            })
+        },
+        hasAvailableRegions() {
+            return Object.keys(this.availableRegions).length > 0;
+        },
+        onRegionIdChange(event) {
+            this.$refs.region.value = this.selectedRegion.length > 0 ?
+                this.availableRegions[this.selectedRegion].name :
+                ''
+            this.onChange(event)
+            this.validateField(this.fields['region'])
+        }
+    }
+}
+</script>

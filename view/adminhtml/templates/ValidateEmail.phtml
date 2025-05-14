@@ -1,0 +1,45 @@
+<?php
+/**
+ * ManiyaTech
+ *
+ * @author        Milan Maniya
+ * @package       ManiyaTech_Crud
+ */
+?>
+
+<script>
+require([
+    'jquery',
+    'Magento_Ui/js/lib/validation/validator'
+], function($, validator) {
+    // Add custom validation rule for unique email
+    validator.addRule(
+        'validate-email-unique',
+        function(value, element) {
+            var email = value;
+            var result = false;
+
+            // Make AJAX call to check if the email exists (synchronous)
+            $.ajax({
+                url: '<?= /* @noEscape */ $block->getUrl('crud/student_management/validateEmail') ?>',
+                type: 'POST',
+                data: { email: email, stud_id: jQuery('[name="stud_id"]').val() },
+                async: false,
+                success: function(response) {
+                    if (response.isUnique) {
+                        result = true;
+                    } else {
+                        result = false;
+                    }
+                },
+                error: function() {
+                    // Handle error gracefully
+                    result = false;
+                }
+            });
+            return result;
+        },
+        $.mage.__('This email is already in use.')
+    );
+});
+</script>

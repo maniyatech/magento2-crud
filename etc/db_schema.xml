@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * ManiyaTech
+ *
+ * @author        Milan Maniya
+ * @package       ManiyaTech_Crud
+ */
+-->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- Student Standard Table -->
+    <table name="student_standard" resource="default" engine="innodb" comment="Student Standard Table">
+        <column xsi:type="int" name="standard_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Standard ID"/>
+        <column xsi:type="varchar" name="title" nullable="false" length="255" comment="Title"/>
+        <column xsi:type="smallint" name="status" unsigned="false" nullable="false" default="0" comment="Status"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="standard_id"/>
+        </constraint>
+    </table>
+
+    <!-- Student Management Table -->
+    <table name="student_management" resource="default" engine="innodb" comment="Student Management Table">
+        <column xsi:type="int" name="stud_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Student ID"/>
+        <column xsi:type="int" name="stud_standard_id" unsigned="true" nullable="false" comment="Student Standard ID"/>
+        <column xsi:type="varchar" name="profile" length="255" nullable="true" comment="Profile"/>
+        <column xsi:type="varchar" name="name" length="255" nullable="false" comment="Student Name"/>
+        <column xsi:type="varchar" name="gender" length="10" nullable="false" comment="Gender"/>
+        <column xsi:type="varchar" name="email" length="50" nullable="false" comment="Email"/>
+        <column xsi:type="text" name="address" nullable="true" comment="Residential Address"/>
+        <column xsi:type="varchar" name="hobby" length="255" nullable="true" comment="Hobby"/>
+        <column xsi:type="smallint" name="status" unsigned="false" nullable="false" default="0" comment="Status"/>
+        <column xsi:type="varchar" name="country_id" length="100" nullable="true" comment="Country"/>
+        <column xsi:type="varchar" name="region" length="100" nullable="true" comment="State"/>
+        <column xsi:type="varchar" name="region_id" length="10" nullable="true" comment="State ID"/>
+        <column xsi:type="varchar" name="city" length="100" nullable="true" comment="City"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="stud_id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign" referenceId="FK_STUDENT_STANDARD_ID"
+                    table="student_management" column="stud_standard_id"
+                    referenceTable="student_standard" referenceColumn="standard_id"
+                    onDelete="CASCADE"/>
+    </table>
+</schema>

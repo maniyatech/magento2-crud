@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * ManiyaTech
+ *
+ * @author        Milan Maniya
+ * @package       ManiyaTech_Crud
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="ManiyaTech_Crud" setup_version="1.0.0" schema_version="1.0.0">
+        <sequence>
+            <module name="ManiyaTech_Core"/>
+        </sequence>
+    </module>
+</config>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * ManiyaTech
+ *
+ * @author        Milan Maniya
+ * @package       ManiyaTech_Crud
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="ManiyaTech_Crud::main" title="Student Management" translate="title" module="ManiyaTech_Crud" parent="ManiyaTech_Core::core" sortOrder="150" resource="ManiyaTech_Crud::main" />
+
+        <add id="ManiyaTech_Crud::grid" parent="ManiyaTech_Crud::main" title="Manage Student Information" module="ManiyaTech_Crud"  sortOrder="1" dependsOnModule="ManiyaTech_Crud" action="crud/student_management/index" resource="ManiyaTech_Crud::grid" />
+
+        <add id="ManiyaTech_Crud::grid_standard" parent="ManiyaTech_Crud::main" title="Manage Student Standard" module="ManiyaTech_Crud"  sortOrder="2" dependsOnModule="ManiyaTech_Crud" action="crud/standard/index" resource="ManiyaTech_Crud::grid_standard" />
+    </menu>
+</config>

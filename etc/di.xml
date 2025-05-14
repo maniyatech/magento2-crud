@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * ManiyaTech
+ *
+ * @author        Milan Maniya
+ * @package       ManiyaTech_Crud
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework/ObjectManager/etc/config.xsd">
+    <!-- Student Management Grid -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="student_management_listing_data_source" xsi:type="string">ManiyaTech\Crud\Model\ResourceModel\Studentmanagement\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="ManiyaTech\Crud\Model\ResourceModel\Studentmanagement\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">student_management</argument>
+            <argument name="resourceModel" xsi:type="string">ManiyaTech\Crud\Model\ResourceModel\Studentmanagement\Collection</argument>
+        </arguments>
+    </virtualType>
+    <type name="ManiyaTech\Crud\Ui\Component\Listing\Column\MassStatus">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="urlPath" xsi:type="string">crud/student_management/massStatus</item>
+                <item name="paramName" xsi:type="string">status</item>
+                <item name="confirm" xsi:type="array">
+                    <item name="title" xsi:type="string" translatable="true">Change Status</item>
+                    <item name="message" xsi:type="string" translatable="true">Are you sure wan't to Change Status?</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- End Student Management Grid -->
+
+    <!-- Student Standard Grid -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="student_standard_listing_data_source" xsi:type="string">ManiyaTech\Crud\Model\ResourceModel\Studentstandard\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="ManiyaTech\Crud\Model\ResourceModel\Studentstandard\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">student_standard</argument>
+            <argument name="resourceModel" xsi:type="string">ManiyaTech\Crud\Model\ResourceModel\Studentstandard\Collection</argument>
+        </arguments>
+    </virtualType>
+    <type name="ManiyaTech\Crud\Ui\Component\Listing\Column\MassStandardStatus">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="urlPath" xsi:type="string">crud/standard/massStatus</item>
+                <item name="paramName" xsi:type="string">status</item>
+                <item name="confirm" xsi:type="array">
+                    <item name="title" xsi:type="string" translatable="true">Change Status</item>
+                    <item name="message" xsi:type="string" translatable="true">Are you sure wan't to Change Status?</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- End Student Standard Grid -->
+</config>

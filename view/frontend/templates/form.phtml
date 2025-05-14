@@ -1,0 +1,207 @@
+<?php
+/**
+ * ManiyaTech
+ *
+ * @author        Milan Maniya
+ * @package       ManiyaTech_Crud
+ */
+
+$countryList = $block->getCountries();
+$regionList = $block->getRegion();
+$standards = $block->getStudentstandards();
+?>
+<form id="student-form"
+      action="<?= /* @noEscape */ $block->getUrl('*/student/save'); ?>"
+      method="post"
+      enctype="multipart/form-data"
+      data-hasrequired="<?= /* @noEscape */ __('* Required Fields') ?>"
+      data-mage-init='{"validation":{}}'>
+    <fieldset>
+        <legend>Student Form</legend>
+        <input type="hidden" name="form_key" value="<?= /* @noEscape */ $block->getFormKey(); ?>" />
+        <input type="hidden" name="status" value="1" />
+        <input type="hidden" name="form_type" value="luma" />
+        <div class="field required">
+            <label for="profile" class="label"><span><?= /* @noEscape */ __('Profile') ?></span></label>
+            <div class="control">
+                <input type="file" id="profile" name="profile" class="input-text" data-validate="{required:true}">
+            </div>
+        </div>
+
+        <div class="field required">
+            <label for="name" class="label"><span><?= /* @noEscape */ __('Name') ?></span></label>
+            <div class="control">
+                <input type="text" id="name" name="name" class="input-text" data-validate="{required:true}">
+            </div>
+        </div>
+
+        <div class="field required">
+            <label for="student_standard" class="label"><span><?= /* @noEscape */ __('Standard') ?></span></label>
+            <div class="control">
+                <select id="stud_standard_id" name="stud_standard_id" class="select" data-validate="{required:true}">
+                    <?php if ($standards->getSize()):?>
+                        <option value=""><?= /* @noEscape */ __('Please Select') ?></option>
+                        <?php foreach ($standards as $standard) { ?>
+                            <option value="<?= /* @noEscape */ $standard->getStandardId() ?>">
+                                <?= /* @noEscape */ $standard->getTitle() ?>
+                            </option>
+                        <?php } else: ?>
+                        <option value="">
+                            <?= /* @noEscape */ __('Please add standard first from admin side.') ?>
+                        </option>
+                    <?php endif;?>
+                </select>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label for="email" class="label"><span><?= /* @noEscape */ __('Email') ?></span></label>
+            <div class="control">
+                <input type="email" id="email" name="email" class="input-text" data-validate="{required:true, 'validate-email':true}"><?php //phpcs:ignore ?>
+            </div>
+            <div id="email-validation-message" style="color: red; display: none;">
+                <?= /* @noEscape */ __('This email is already in use.') ?>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label for="gender" class="label"><span><?= /* @noEscape */ __('Gender') ?></span></label>
+            <div class="control">
+                <input type="radio" id="gender_male" name="gender" value="male" class="radio" data-validate="{required:true}"><?php //phpcs:ignore ?>
+                <label for="gender_male">Male</label>
+                <input type="radio" id="gender_female" name="gender" value="female" class="radio" data-validate="{required:true}">  <?php //phpcs:ignore ?>
+                <label for="gender_female">Female</label>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label for="hobby" class="label"><span><?= /* @noEscape */ __('Hobby') ?></span></label>
+            <div class="control">
+                <input type="checkbox" id="hobby_cricket" name="hobby[]" value="cricket" class="checkbox" data-validate="{required:true}"><?php //phpcs:ignore ?>
+                <label for="hobby_cricket">Playing Cricket</label>
+
+                <input type="checkbox" id="hobby_movie" name="hobby[]" value="movie" class="checkbox" data-validate="{required:true}"><?php //phpcs:ignore ?>
+                <label for="hobby_movie">Watching Movie</label>
+
+                <input type="checkbox" id="hobby_reading" name="hobby[]" value="reading" class="checkbox" data-validate="{required:true}"><?php //phpcs:ignore ?>
+                <label for="hobby_reading">Reading Book</label>
+
+                <input type="checkbox" id="hobby_swimming" name="hobby[]" value="swimming" class="checkbox" data-validate="{required:true}"><?php //phpcs:ignore ?>
+                <label for="hobby_swimming">Swimming</label>
+            </div>
+        </div>
+
+        <!-- Address Field -->
+        <div class="field required">
+            <label for="address" class="label"><span><?= /* @noEscape */ __('Address') ?></span></label>
+            <div class="control">
+                <textarea id="address" name="address" class="input-text" data-validate="{required:true}"></textarea>
+            </div>
+        </div>
+
+        <div class="field country required">
+            <label class="label" for="country"><span><?= /* @noEscape */ __('Country') ?></span></label>
+            <div class="control"><?= /* @noEscape */ $countryList?></div>
+        </div>
+
+        <div class="field region required">
+            <label class="label" for="state"><span><?= /* @noEscape */ __('State') ?></span></label>
+            <div class="control"><?= /* @noEscape */ $regionList?></div>
+        </div>
+
+        <div class="field states" style="display:none">
+            <label class="label" for="states"><span><?= /* @noEscape */ __('State') ?></span></label>
+            <div class="control">
+                <input name="state" id="states" title="<?= /* @noEscape */ __('State') ?>" class="input-text" type="text" /><?php //phpcs:ignore ?>
+            </div>
+        </div>
+
+        <div class="field required">
+            <label for="city" class="label"><span>City</span></label>
+            <div class="control">
+                <input type="text" id="city" name="city" class="input-text" data-validate="{required:true}">
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="action submit primary" id="student-form button">
+                <span>Submit</span>
+            </button>
+        </div>
+    </fieldset>
+</form>
+
+<!-- JavaScript for Form Validation and AJAX Email Validation -->
+<script>
+    require(['jquery', 'mage/validation'], function($) {
+        // Enable Magento 2 client-side validation on form submission
+        jQuery('#student-form').mage('validation');
+
+        jQuery('#email').on('change', function() {
+            var email = jQuery(this).val();
+            var formKey = $('input[name="form_key"]').val();
+
+            // AJAX request to check if the email exists
+            jQuery.ajax({
+                url: '<?= /* @noEscape */ $block->getUrl('*/student/checkEmailExists'); ?>',
+                type: 'POST',
+                data: { email: email, form_key: formKey },
+                dataType: 'json',
+                showLoader: true
+            }).done(function(response) {
+                if (response.exists) {
+                    // If email exists, display an error message and prevent form submission
+                    jQuery('#email-validation-message').show();
+                    jQuery('#student-form button[type="submit"]').prop('disabled', true);  // Disable submit button
+                } else {
+                    // If email is unique, hide the error message and enable submit button
+                    jQuery('#email-validation-message').hide();
+                    jQuery('#student-form button[type="submit"]').prop('disabled', false);  // Enable submit button
+                }
+            });
+        });
+
+        // Prevent form submission if email exists
+        jQuery('#student-form').on('submit', function(e) {
+            var emailValidationMessage = $('#email-validation-message').is(':visible');
+            if (emailValidationMessage) {
+                e.preventDefault();  // Prevent form submission
+                alert("Please fix the errors before submitting.");
+            }
+        });
+
+        jQuery(document).on('change','#country',function() {
+            var countryId = jQuery('#country').val();
+            var formKey = jQuery('input[name="form_key"]').val();  // Get form key from hidden input
+
+            var param = {
+                country: countryId,
+                form_key: formKey  // Include the form key in the request
+            };
+
+            jQuery.ajax({
+                showLoader: true,
+                url: '<?= /* @noEscape */ $block->getCountryAction(); ?>',
+                data: param,
+                type: "GET",
+                dataType: 'json'
+            }).done(function (data) {
+                jQuery('#state').empty();
+                if (data.value == '') {
+                    jQuery('#states').attr('data-validate', '{required:true}');
+                    jQuery('#states').addClass('required-entry');
+                    jQuery('.field.states').addClass('required');
+                    jQuery('.field.states.required').show();
+                    jQuery('.field.region.required').hide();
+                } else {
+                    jQuery('#states').removeAttr('data-validate');
+                    jQuery('#states').removeClass('required-entry');
+                    jQuery('.field.states').removeClass('required');
+                    jQuery('#state').append(data.value);
+                    jQuery('.field.states.required').hide();
+                    jQuery('.field.region.required').show();
+                }
+            });
+        });
+    });
+</script>
